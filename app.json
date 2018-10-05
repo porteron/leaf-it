@@ -1,8 +1,0 @@
-{
-  "expo": {
-    "sdkVersion": "27.0.0",
-    "android": {
-      "permissions": ["READ_EXTERNAL_STORAGE"]
-    }
-  }
-}

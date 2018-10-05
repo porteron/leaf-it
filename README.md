@@ -1,7 +1,28 @@
-## Expo Camera Roll Select
-Example of how to build your own multi image picker in react native
-without using any native components which means it also works in expo.
+# image-upload-example
 
-I'd love to hear the communities feedback. I can definitely work on
-improving it and turn it into an npm package if there is demand.
-But for now, I'm just happy to not have to detach from expo!
+Snap a photo or grab it from your camera roll, and upload it. See `/backend`
+for an example node service to handle the upload to S3 (Amazon AWS), and `/frontend`
+for the Expo app.
+
+## Frontend
+
+``` sh
+cd image-upload-example
+yarn install
+
+OR
+
+npm install
+```
+
+Then open the image-upload-example folder in XDE.
+
+### Backend
+
+``` sh
+cd image-upload-example
+npm install
+npm start
+```
+
+**Try it:** https://expo.io/@community/image-upload-example
