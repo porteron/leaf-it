@@ -50,7 +50,7 @@ export default class App extends Component {
         <Button onPress={this._takePhoto} title="Take a photo" />
 
         <SearchableDropdown
-          onTextChange={(text) => {}}
+          onTextChange={(text) => { }}
           onItemSelect={(item) => alert(JSON.stringify(item))}
           containerStyle={{
             padding: 5,
@@ -86,7 +86,7 @@ export default class App extends Component {
 
         <Button
           title="Add to Dataset"
-          onPress={() => {this._handleImagePicked()}}
+          onPress={() => { this._handleImagePicked() }}
           style={{ backgroundColor: 'green', paddingTop: 20 }}
         />
 
@@ -182,20 +182,25 @@ export default class App extends Component {
       status: cameraRollPerm
     } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-    // only if user allows permission to camera roll
+    // Only if user allows permission to camera roll
     if (cameraRollPerm === 'granted') {
       let selectedImage = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [4, 3],
       });
 
-      this.setState({selectedImage})
+      this.setState({ selectedImage })
     }
   };
 
   _handleImagePicked = async () => {
     let uploadResponse, uploadResult;
-    const {selectedImage} = this.state
+    const { selectedImage } = this.state
+s
+    if (Object.keys(selectedImage).length === 0) {
+      alert("No Image Selected")
+      return false
+    }
     try {
       this.setState({
         uploading: true
@@ -223,7 +228,7 @@ export default class App extends Component {
 }
 
 async function uploadImageAsync(uri) {
-  
+
   let apiUrl = `http://localhost:3000/upload`
 
   let uriParts = uri.split('.');
