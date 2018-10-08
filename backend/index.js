@@ -13,6 +13,8 @@ const s3 = new aws.S3({
   region: "us-east-1",
 });
 
+let directory = '';
+
 // Initialize multers3 with our s3 config and other options
 const upload = multer({
   storage: multerS3({
@@ -23,7 +25,7 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key(req, file, cb) {
-      cb(null, Date.now().toString() + '.png');
+      cb(null, `${req.query.plantName}/${Date.now().toString()}.png`);
     }
   })
 })
@@ -33,11 +35,12 @@ const app = require('express')();
 const http = require('http').Server(app);
 
 app.post('/upload', upload.single('photo'), (req, res, next) => {
-  console.log("upload")
+  console.log("-- Upload --")
 
-  const { plantName } = req.body
+  const { plantName } = req.query
+
+  console.log("Plant Name: ", plantName)
   
-  console.log("Upload File")
   res.json(req.file)
 })
 

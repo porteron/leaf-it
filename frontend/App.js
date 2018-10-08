@@ -220,12 +220,12 @@ export default class App extends Component {
       });
 
       if (!selectedImage.cancelled) {
-        uploadResponse = await uploadImageAsync(selectedImage.uri);
+        uploadResponse = await uploadImageAsync(selectedImage.uri, plantName);
         uploadResult = await uploadResponse.json();
 
         this.setState({
           image: uploadResult.location
-        });
+        })
       }
     } catch (error) {
       console.log("error: ", error);
@@ -238,12 +238,10 @@ export default class App extends Component {
   };
 }
 
-async function uploadImageAsync(uri) {
+async function uploadImageAsync(uri, plantName) {
   console.log("Upload")
 
-  // const { plantName } = this.state
-
-  let apiUrl = `http://localhost:3000/upload`
+  let apiUrl = `http://localhost:3000/upload?plantName=${plantName}`
 
   let uriParts = uri.split('.');
   let fileType = uriParts[uriParts.length - 1];
@@ -253,7 +251,6 @@ async function uploadImageAsync(uri) {
     uri,
     name: `photo.${fileType}`,
     type: `image/${fileType}`,
-    // plantName,
   });
 
   let options = {
