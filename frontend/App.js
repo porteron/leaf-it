@@ -10,6 +10,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput,
 } from 'react-native';
 import { Constants, ImagePicker, Permissions } from 'expo';
 
@@ -39,12 +40,34 @@ export default class App extends Component {
         />
 
         <Button onPress={this._takePhoto} title="Take a photo" />
+        <TextInput
+                style={{marginTop: 10, height: 40, borderColor: 'gray', borderWidth: 1, minWidth: "60%", paddingLeft: 10}}
+                onChangeText={(text) => this.setState({text})}
+                value={"12"}
+                placeholder="Country"
+        />
+
+        <Button 
+          title="Add to Dataset" 
+          onPress={()=>{}} 
+          style={{backgroundColor: 'green', paddingTop: 20}}
+        />
+        
+        <Text>Or</Text>
+
+        <Button 
+          title="Identify Plant" 
+          onPress={()=>{}} 
+          style={{backgroundColor: 'green'}}
+        />
+
 
         {this._maybeRenderImage()}
         {this._maybeRenderUploadingOverlay()}
       </View>
     );
   }
+
 
   _maybeRenderUploadingOverlay = () => {
     if (this.state.uploading) {
