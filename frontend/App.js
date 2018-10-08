@@ -9,15 +9,23 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Picker,
   View,
   TextInput,
 } from 'react-native';
+
 import { Constants, ImagePicker, Permissions } from 'expo';
+
+import SearchableDropdown from 'react-native-searchable-dropdown';
+
+import { plants } from './models/plants'
 
 export default class App extends Component {
   state = {
     image: null,
     uploading: false,
+    plantName: '',
+    selectedImage: {}
   };
 
   render() {
@@ -40,25 +48,54 @@ export default class App extends Component {
         />
 
         <Button onPress={this._takePhoto} title="Take a photo" />
-        <TextInput
-                style={{marginTop: 10, height: 40, borderColor: 'gray', borderWidth: 1, minWidth: "60%", paddingLeft: 10}}
-                onChangeText={(text) => this.setState({text})}
-                value={"12"}
-                placeholder="Country"
+
+        <SearchableDropdown
+          onTextChange={(text) => {}}
+          onItemSelect={(item) => alert(JSON.stringify(item))}
+          containerStyle={{
+            padding: 5,
+            width: "90%"
+          }}
+          textInputStyle={{
+            padding: 12,
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 5
+          }}
+          itemStyle={{
+            padding: 10,
+            marginTop: 2,
+            backgroundColor: '#ddd',
+            borderColor: '#bbb',
+            borderWidth: 1,
+            borderRadius: 5
+          }}
+          itemTextStyle={{
+            color: '#222'
+          }}
+          itemsContainerStyle={{
+            maxHeight: 140
+          }}
+          items={plants}
+          // defaultIndex={2}
+          placeholder="Plant Name"
+          resetValue={false}
+          underlineColorAndroid='transparent' />
         />
 
-        <Button 
-          title="Add to Dataset" 
-          onPress={()=>{}} 
-          style={{backgroundColor: 'green', paddingTop: 20}}
+
+        <Button
+          title="Add to Dataset"
+          onPress={() => {this._handleImagePicked()}}
+          style={{ backgroundColor: 'green', paddingTop: 20 }}
         />
-        
+
         <Text>Or</Text>
 
-        <Button 
-          title="Identify Plant" 
-          onPress={()=>{}} 
-          style={{backgroundColor: 'green'}}
+        <Button
+          title="Identify Plant"
+          onPress={() => { }}
+          style={{ backgroundColor: 'green' }}
         />
 
 
@@ -147,25 +184,25 @@ export default class App extends Component {
 
     // only if user allows permission to camera roll
     if (cameraRollPerm === 'granted') {
-      let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      let selectedImage = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [4, 3],
       });
 
-      this._handleImagePicked(pickerResult);
+      this.setState({selectedImage})
     }
   };
 
-  _handleImagePicked = async pickerResult => {
+  _handleImagePicked = async () => {
     let uploadResponse, uploadResult;
-
+    const {selectedImage} = this.state
     try {
       this.setState({
         uploading: true
       });
 
-      if (!pickerResult.cancelled) {
-        uploadResponse = await uploadImageAsync(pickerResult.uri);
+      if (!selectedImage.cancelled) {
+        uploadResponse = await uploadImageAsync(selectedImage.uri);
         uploadResult = await uploadResponse.json();
 
         this.setState({
@@ -186,7 +223,8 @@ export default class App extends Component {
 }
 
 async function uploadImageAsync(uri) {
-  let apiUrl =  `http://localhost:3000/upload`
+  
+  let apiUrl = `http://localhost:3000/upload`
 
   let uriParts = uri.split('.');
   let fileType = uriParts[uriParts.length - 1];
