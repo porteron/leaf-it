@@ -2,19 +2,15 @@ import React, { Component } from 'react';
 import {
   ActivityIndicator,
   Button,
-  Clipboard,
   Image,
-  Share,
   StatusBar,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  Picker,
   View,
   TextInput,
 } from 'react-native';
 
-import { Constants, ImagePicker, Permissions } from 'expo';
+import { ImagePicker, Permissions } from 'expo';
 
 import SearchableDropdown from 'react-native-searchable-dropdown';
 
@@ -50,8 +46,9 @@ export default class App extends Component {
         <Button onPress={this._takePhoto} title="Take a photo" />
 
         <SearchableDropdown
-          onTextChange={(text) => { }}
-          onItemSelect={(item) => alert(JSON.stringify(item))}
+          onTextChange={(text) => {console.log(text)}}
+          onItemSelect={(item) => {this._selectPlantName(item)}}
+          enableEmptySections={true}
           containerStyle={{
             padding: 5,
             width: "90%"
@@ -78,6 +75,7 @@ export default class App extends Component {
           }}
           items={plants}
           // defaultIndex={2}
+          // value={{name:this.state.plantName}}
           placeholder="Plant Name"
           resetValue={false}
           underlineColorAndroid='transparent' />
@@ -103,6 +101,26 @@ export default class App extends Component {
         {this._maybeRenderUploadingOverlay()}
       </View>
     );
+  }
+
+  _handleChange(text){
+    console.log("Text: ". text)
+    try{
+      this.setState({
+        plantName: text
+      })
+    }catch(error){
+      console.log("Handle Change Error: ", error)
+    }
+
+  }
+  _selectPlantName(item){
+    console.log("Item: ", item.name)
+    if(item.name){
+      this.setState({
+        plantName: item.name
+      })
+    }
   }
 
 
@@ -144,18 +162,7 @@ export default class App extends Component {
     );
   };
 
-  _share = () => {
-    Share.share({
-      message: this.state.image,
-      title: 'Check out this photo',
-      url: this.state.image,
-    });
-  };
 
-  _copyToClipboard = () => {
-    Clipboard.setString(this.state.image);
-    alert('Copied image URL to clipboard');
-  };
 
   _takePhoto = async () => {
     const {
@@ -195,12 +202,18 @@ export default class App extends Component {
 
   _handleImagePicked = async () => {
     let uploadResponse, uploadResult;
-    const { selectedImage } = this.state
-s
-    if (Object.keys(selectedImage).length === 0) {
+    const { selectedImage, plantName } = this.state
+    
+    if (Object.keys(selectedImage).length === 0 ) {
       alert("No Image Selected")
       return false
     }
+
+    if(!plantName){
+      alert("Please enter plant name")
+      return false
+    }
+
     try {
       this.setState({
         uploading: true
@@ -214,11 +227,9 @@ s
           image: uploadResult.location
         });
       }
-    } catch (e) {
-      console.log({ uploadResponse });
-      console.log({ uploadResult });
-      console.log({ e });
-      alert('Upload failed, sorry :(');
+    } catch (error) {
+      console.log("error: ", error);
+      alert('Upload failed, sorry');
     } finally {
       this.setState({
         uploading: false
@@ -228,6 +239,9 @@ s
 }
 
 async function uploadImageAsync(uri) {
+  console.log("Upload")
+
+  // const { plantName } = this.state
 
   let apiUrl = `http://localhost:3000/upload`
 
@@ -239,6 +253,7 @@ async function uploadImageAsync(uri) {
     uri,
     name: `photo.${fileType}`,
     type: `image/${fileType}`,
+    // plantName,
   });
 
   let options = {

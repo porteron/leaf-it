@@ -20,7 +20,7 @@ const upload = multer({
     bucket: process.env.AWS_BUCKET,
     acl: 'public-read',
     metadata(req, file, cb) {
-      cb(null, {fieldName: file.fieldname});
+      cb(null, { fieldName: file.fieldname });
     },
     key(req, file, cb) {
       cb(null, Date.now().toString() + '.png');
@@ -33,6 +33,10 @@ const app = require('express')();
 const http = require('http').Server(app);
 
 app.post('/upload', upload.single('photo'), (req, res, next) => {
+  console.log("upload")
+
+  const { plantName } = req.body
+  
   console.log("Upload File")
   res.json(req.file)
 })
