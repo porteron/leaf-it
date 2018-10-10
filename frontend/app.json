@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "image-upload-example",
-    "description": "Demonstration of how to upload images from the ImagePicker, using a node backend to upload to S3",
-    "slug": "image-upload-example",
+    "name": "leaf-it",
+    "description": "Upload plant images to S3",
+    "slug": "leaf-it",
     "sdkVersion": "29.0.0",
     "version": "1.0.0",
     "orientation": "portrait",

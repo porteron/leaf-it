@@ -241,8 +241,8 @@ export default class App extends Component {
 async function uploadImageAsync(uri, plantName) {
   console.log("Upload")
 
-  let apiUrl = `http://localhost:3000/upload?plantName=${plantName}`
-
+  // let apiUrl = `http://localhost:3000/upload?plantName=${plantName}`
+  let apiUrl = `http://a8944446.ngrok.io/upload?plantName=${plantName}`
   let uriParts = uri.split('.');
   let fileType = uriParts[uriParts.length - 1];
 

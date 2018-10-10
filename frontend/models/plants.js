@@ -5,7 +5,7 @@ export const plants  = [
     },
     {
         id: 2,
-        name: 'Luminesa'
+        name: 'Lantana - Flame'
     },
     {
         id: 3,
@@ -25,7 +25,7 @@ export const plants  = [
     },
     {
         id: 7,
-        name: 'Anglesia'
+        name: 'Coffee Berry Plant'
     },
     {
         id: 8,

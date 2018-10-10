@@ -25,7 +25,7 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key(req, file, cb) {
-      cb(null, `${req.query.plantName}/${Date.now().toString()}.png`);
+      cb(null, `data/plants/${req.query.plantName}/${Date.now().toString()}_${req.query.plantName}.png`);
     }
   })
 })
@@ -40,7 +40,7 @@ app.post('/upload', upload.single('photo'), (req, res, next) => {
   const { plantName } = req.query
 
   console.log("Plant Name: ", plantName)
-  
+
   res.json(req.file)
 })
 
