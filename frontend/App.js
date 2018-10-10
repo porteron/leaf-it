@@ -31,6 +31,9 @@ export default class App extends Component {
 
     return (
       <View style={styles.container}>
+        <Text>Leaf It</Text>
+        <Image source={require('./assets/images/logo.png')} style={{height:80, width:45, position:'absolute', top: 40, left:25}} />
+
         <StatusBar barStyle="default" />
 
         <Text
