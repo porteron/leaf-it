@@ -76,9 +76,9 @@ export default class App extends Component {
 
           <StatusBar barStyle="default" />
 
-          <View style={{ marginTop: 190 }}>
+          <View style={{ marginTop: 290 }}>
             <Animatable.Text animation="pulse" easing="ease-in" iterationCount="infinite">
-              <TouchableHighlight onPress={this._pickImage} style={{ backgroundColor: '#007821', borderRadius: 100, height: 200, width: 200, shadowColor: '#005d1a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 2 }}>
+              <TouchableHighlight onPress={this._takePhoto} style={{ backgroundColor: '#007821', borderRadius: 100, height: 200, width: 200, shadowColor: '#005d1a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 2 }}>
                 <View>
                   <Image source={leaf} style={{ height: 140, width: 140, left: 30, top: 30 }} />
                 </View>
@@ -142,7 +142,7 @@ export default class App extends Component {
           {this._maybeRenderUploadingOverlay()}
           <View style={{ height: 70, width: '100%', position: "absolute", bottom: 30 }}>
             <TouchableOpacity
-              onPress={() => { }}
+              onPress={this._pickImage}
               style={{ position: "absolute", right: 20 }}
             >
               <Image

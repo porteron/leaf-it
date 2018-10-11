@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "leaf-it",
-    "description": "Upload plant images to S3",
+    "description": "New UI",
     "slug": "leaf-it",
     "sdkVersion": "29.0.0",
     "version": "1.0.0",
