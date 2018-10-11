@@ -9,56 +9,92 @@ import {
   View,
   TouchableHighlight,
   TouchableOpacity,
+  Easing,
 } from 'react-native';
 
 import { ImagePicker, Permissions } from 'expo';
+import { AnimatedBackgroundColorView } from 'react-native-animated-background-color-view';
 
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import * as Animatable from 'react-native-animatable';
 import { plants } from './models/plants'
+import { Font } from 'expo';
 
 const logo = require('./assets/images/logo.png')
+const leaf = require('./assets/images/leaf.png')
+const compass = require('./assets/images/compass.png')
+const camera = require('./assets/images/camera.png')
 const profile = require('./assets/images/profile.png')
 const picturesIcon = require('./assets/images/pictures_icon.png')
+
 export default class App extends Component {
   state = {
     image: null,
     uploading: false,
+    loading: true,
     plantName: '',
     selectedImage: {}
   };
 
+  async componentWillMount() {
+    await Font.loadAsync({
+      'leaf-font': require('./assets/fonts/leaf-font.otf')
+    });
+    this.setState({ loading: false });
+
+  }
+
   render() {
     let {
-      image
+      image,
+      loading
     } = this.state;
 
+    if (loading) {
+      return <View>Loading...</View>
+    }
+
     return (
-      <View style={styles.container}>
-        <View style={{ position: 'absolute', top: 60, width: "100%" }}>
-          <Image source={logo} style={{display:"none", height: 130, width: 70, position: "absolute", left: 25 }} />
-          <Image source={profile} style={{ height: 30, width: 30, position: "absolute", left: 30 }} />
+      <AnimatedBackgroundColorView
+        color='#70d48c'
+        initialColor='green'
+        duration={10000}
+      // easing={()=>{Easing.out("bounce")}}
+      >
 
-          <Text style={{ position: "absolute", left: 20, top: 40, fontSize: 14, fontFamily: "Avenir" }}>My Plants</Text>
+        <View style={styles.container}>
+          <View style={{ position: 'absolute', top: 60, width: "100%" }}>
+            <Image source={logo} style={{ display: "none", height: 130, width: 70, position: "absolute", left: 25 }} />
+            <Image source={profile} style={{ height: 30, width: 30, position: "absolute", left: 30 }} />
 
-          <Text style={{ position: "absolute", left: "43%", top: 40, fontSize: 20, fontFamily: "Avenir" }}>Leaf It</Text>
-        </View>
+            <Text style={{ position: "absolute", left: 20, top: 40, fontSize: 14, fontFamily: "Avenir" }}>My Plants</Text>
+            <Text style={{ position: "absolute", left: "38%", top: -3, fontSize:32, fontFamily: "leaf-font", color: "#004303", textShadowColor: "#ddd", textShadowOffset: { width: 0, height: .5 }, textShadowRadius: .5 }}>Leaf It</Text>
 
-        <StatusBar barStyle="default" />
-        <Animatable.Text animation="pulse" easing="ease-in" iterationCount="infinite" style={{ textAlign: 'center', marginTop:190 }}>
-          <TouchableHighlight onPress={this._takePhoto} style={{ backgroundColor: 'green', borderRadius: 100, height: 200, width: 200, borderWidth: 4, borderColor: "#00d27e", shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 2 }}>
-            <View>
-              <Image source={logo} style={{ height: 130, width: 70, left: 60, top: 30 }} />
-            </View>
-          </TouchableHighlight>
-        </Animatable.Text>
+            <Image source={compass} style={{ height: 30, width: 30, position: "absolute", right: 35, top: 5 }} />
+            <Text style={{ position: "absolute", right: 20, top: 40, fontSize: 14, fontFamily: "Avenir" }}>Discover</Text>
+          </View>
 
-        {/* <Button
+          <StatusBar barStyle="default" />
+
+          <View style={{ marginTop: 190 }}>
+            <Animatable.Text animation="pulse" easing="ease-in" iterationCount="infinite">
+              <TouchableHighlight onPress={this._pickImage} style={{ backgroundColor: '#007821', borderRadius: 100, height: 200, width: 200, shadowColor: '#005d1a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 2 }}>
+                <View>
+                  <Image source={leaf} style={{ height: 140, width: 140, left: 30, top: 30 }} />
+                </View>
+              </TouchableHighlight>
+            </Animatable.Text>
+          </View>
+          <Text style={{marginTop: 20}}>Tap to Identify</Text>
+
+
+
+          {/* <Button
           onPress={this._pickImage}
           title="Pick an image from camera roll"
         /> */}
 
-        {/* <SearchableDropdown
+          {/* <SearchableDropdown
           onTextChange={(text) => { console.log(text) }}
           onItemSelect={(item) => { this._selectPlantName(item) }}
           enableEmptySections={true}
@@ -96,27 +132,28 @@ export default class App extends Component {
         /> */}
 
 
-        {/* <Button
+          {/* <Button
           title="Add to Dataset"
           onPress={() => { this._handleImagePicked() }}
           style={{ backgroundColor: 'green', paddingTop: 20 }}
         /> */}
 
-        {this._maybeRenderImage()}
-        {this._maybeRenderUploadingOverlay()}
-        <View style={{ height: 70, width: '100%', position: "absolute", bottom: 30}}>
-          <TouchableOpacity 
-          onPress={()=>{}}
-          style={{position:"absolute", right:20}}
-          >
-            <Image 
-            source={picturesIcon}
-            style={{height:50, width:50, marginLeft:30}}
-            />
-            <Text>Select From Library</Text>
-          </TouchableOpacity> 
+          {this._maybeRenderImage()}
+          {this._maybeRenderUploadingOverlay()}
+          <View style={{ height: 70, width: '100%', position: "absolute", bottom: 30 }}>
+            <TouchableOpacity
+              onPress={() => { }}
+              style={{ position: "absolute", right: 20 }}
+            >
+              <Image
+                source={picturesIcon}
+                style={{ height: 50, width: 50, marginLeft: 30 }}
+              />
+              <Text>Select From Library</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </AnimatedBackgroundColorView>
     );
   }
 
@@ -287,7 +324,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: "#d6ffd7"
+    // backgroundColor: "#d6ffd7",
+    // backgroundColor: "#bad8bb"
   },
   exampleText: {
     fontSize: 20,
