@@ -7,15 +7,19 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native';
 
 import { ImagePicker, Permissions } from 'expo';
 
 import SearchableDropdown from 'react-native-searchable-dropdown';
-
+import * as Animatable from 'react-native-animatable';
 import { plants } from './models/plants'
 
+const logo = require('./assets/images/logo.png')
+const profile = require('./assets/images/profile.png')
+const picturesIcon = require('./assets/images/pictures_icon.png')
 export default class App extends Component {
   state = {
     image: null,
@@ -31,26 +35,32 @@ export default class App extends Component {
 
     return (
       <View style={styles.container}>
-        <Text>Leaf It</Text>
-        <Image source={require('./assets/images/logo.png')} style={{height:80, width:45, position:'absolute', top: 40, left:25}} />
+        <View style={{ position: 'absolute', top: 60, width: "100%" }}>
+          <Image source={logo} style={{display:"none", height: 130, width: 70, position: "absolute", left: 25 }} />
+          <Image source={profile} style={{ height: 30, width: 30, position: "absolute", left: 30 }} />
+
+          <Text style={{ position: "absolute", left: 20, top: 40, fontSize: 14, fontFamily: "Avenir" }}>My Plants</Text>
+
+          <Text style={{ position: "absolute", left: "43%", top: 40, fontSize: 20, fontFamily: "Avenir" }}>Leaf It</Text>
+        </View>
 
         <StatusBar barStyle="default" />
+        <Animatable.Text animation="pulse" easing="ease-in" iterationCount="infinite" style={{ textAlign: 'center', marginTop:190 }}>
+          <TouchableHighlight onPress={this._takePhoto} style={{ backgroundColor: 'green', borderRadius: 100, height: 200, width: 200, borderWidth: 4, borderColor: "#00d27e", shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 2 }}>
+            <View>
+              <Image source={logo} style={{ height: 130, width: 70, left: 60, top: 30 }} />
+            </View>
+          </TouchableHighlight>
+        </Animatable.Text>
 
-        <Text
-          style={styles.exampleText}>
-          Example: Upload ImagePicker result
-        </Text>
-
-        <Button
+        {/* <Button
           onPress={this._pickImage}
           title="Pick an image from camera roll"
-        />
+        /> */}
 
-        <Button onPress={this._takePhoto} title="Take a photo" />
-
-        <SearchableDropdown
-          onTextChange={(text) => {console.log(text)}}
-          onItemSelect={(item) => {this._selectPlantName(item)}}
+        {/* <SearchableDropdown
+          onTextChange={(text) => { console.log(text) }}
+          onItemSelect={(item) => { this._selectPlantName(item) }}
           enableEmptySections={true}
           containerStyle={{
             padding: 5,
@@ -60,7 +70,8 @@ export default class App extends Component {
             padding: 12,
             borderWidth: 1,
             borderColor: '#ccc',
-            borderRadius: 5
+            borderRadius: 5,
+            backgroundColor: "white"
           }}
           itemStyle={{
             padding: 10,
@@ -82,44 +93,47 @@ export default class App extends Component {
           placeholder="Plant Name"
           resetValue={false}
           underlineColorAndroid='transparent' />
-        />
+        /> */}
 
 
-        <Button
+        {/* <Button
           title="Add to Dataset"
           onPress={() => { this._handleImagePicked() }}
           style={{ backgroundColor: 'green', paddingTop: 20 }}
-        />
-
-        <Text>Or</Text>
-
-        <Button
-          title="Identify Plant"
-          onPress={() => { }}
-          style={{ backgroundColor: 'green' }}
-        />
-
+        /> */}
 
         {this._maybeRenderImage()}
         {this._maybeRenderUploadingOverlay()}
+        <View style={{ height: 70, width: '100%', position: "absolute", bottom: 30}}>
+          <TouchableOpacity 
+          onPress={()=>{}}
+          style={{position:"absolute", right:20}}
+          >
+            <Image 
+            source={picturesIcon}
+            style={{height:50, width:50, marginLeft:30}}
+            />
+            <Text>Select From Library</Text>
+          </TouchableOpacity> 
+        </View>
       </View>
     );
   }
 
-  _handleChange(text){
-    console.log("Text: ". text)
-    try{
+  _handleChange(text) {
+    console.log("Text: ".text)
+    try {
       this.setState({
         plantName: text
       })
-    }catch(error){
+    } catch (error) {
       console.log("Handle Change Error: ", error)
     }
 
   }
-  _selectPlantName(item){
+  _selectPlantName(item) {
     console.log("Item: ", item.name)
-    if(item.name){
+    if (item.name) {
       this.setState({
         plantName: item.name
       })
@@ -140,10 +154,10 @@ export default class App extends Component {
 
   _maybeRenderImage = () => {
     let {
-      image
+      selectedImage
     } = this.state;
 
-    if (!image) {
+    if (!selectedImage) {
       return;
     }
 
@@ -152,15 +166,15 @@ export default class App extends Component {
         style={styles.maybeRenderContainer}>
         <View
           style={styles.maybeRenderImageContainer}>
-          <Image source={{ uri: image }} style={styles.maybeRenderImage} />
+          <Image source={{ uri: selectedImage.uri }} style={styles.maybeRenderImage} />
         </View>
 
-        <Text
+        {/* <Text
           onPress={this._copyToClipboard}
           onLongPress={this._share}
           style={styles.maybeRenderImageText}>
-          {image}
-        </Text>
+          {selectedImage}
+        </Text> */}
       </View>
     );
   };
@@ -206,13 +220,13 @@ export default class App extends Component {
   _handleImagePicked = async () => {
     let uploadResponse, uploadResult;
     const { selectedImage, plantName } = this.state
-    
-    if (Object.keys(selectedImage).length === 0 ) {
+
+    if (Object.keys(selectedImage).length === 0) {
       alert("No Image Selected")
       return false
     }
 
-    if(!plantName){
+    if (!plantName) {
       alert("Please enter plant name")
       return false
     }
@@ -273,6 +287,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: "#d6ffd7"
   },
   exampleText: {
     fontSize: 20,
