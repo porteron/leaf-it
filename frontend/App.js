@@ -21,9 +21,9 @@ import { plants } from './models/plants'
 import { Font } from 'expo';
 
 const logo = require('./assets/images/logo.png')
-const leaf = require('./assets/images/leaf.png')
+const plant = require('./assets/images/plant.png')
 const compass = require('./assets/images/compass.png')
-const camera = require('./assets/images/camera.png')
+const forest = require('./assets/images/forest.png')
 const profile = require('./assets/images/profile.png')
 const picturesIcon = require('./assets/images/pictures_icon.png')
 
@@ -56,7 +56,7 @@ export default class App extends Component {
 
     return (
       <AnimatedBackgroundColorView
-        color='#70d48c'
+        color='#c0ffd1'
         initialColor='green'
         duration={10000}
       // easing={()=>{Easing.out("bounce")}}
@@ -68,24 +68,44 @@ export default class App extends Component {
             <Image source={profile} style={{ height: 30, width: 30, position: "absolute", left: 30 }} />
 
             <Text style={{ position: "absolute", left: 20, top: 40, fontSize: 14, fontFamily: "Avenir" }}>My Plants</Text>
-            <Text style={{ position: "absolute", left: "38%", top: -3, fontSize:32, fontFamily: "leaf-font", color: "#004303", textShadowColor: "#ddd", textShadowOffset: { width: 0, height: .5 }, textShadowRadius: .5 }}>Leaf It</Text>
+            <Text style={{ position: "absolute", left: "38%", top: -3, fontSize: 28, fontFamily: "leaf-font", color: "#004303", textShadowColor: "#ddd", textShadowOffset: { width: 0, height: .5 }, textShadowRadius: .5 }}>Leaf It</Text>
 
-            <Image source={compass} style={{ height: 30, width: 30, position: "absolute", right: 35, top: 5 }} />
-            <Text style={{ position: "absolute", right: 20, top: 40, fontSize: 14, fontFamily: "Avenir" }}>Discover</Text>
+            {/* <Image source={compass} style={{ height: 30, width: 30, position: "absolute", right: 35, top: 5 }} />
+            <Text >Discover</Text> */}
+            <TouchableOpacity
+              onPress={this._pickImage}
+              style={{ position: "absolute", right: 16, top: 11}}
+            >
+              <Image
+                source={picturesIcon}
+                style={{ height: 22, width: 38, marginLeft: 20, marginBottom:10 }}
+              />
+              <Text style={{fontSize: 14, fontFamily: "Avenir" }}>Photo Library</Text>
+            </TouchableOpacity>
           </View>
 
           <StatusBar barStyle="default" />
 
-          <View style={{ marginTop: 290 }}>
-            <Animatable.Text animation="pulse" easing="ease-in" iterationCount="infinite">
-              <TouchableHighlight onPress={this._takePhoto} style={{ backgroundColor: '#007821', borderRadius: 100, height: 200, width: 200, shadowColor: '#005d1a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 2 }}>
-                <View>
-                  <Image source={leaf} style={{ height: 140, width: 140, left: 30, top: 30 }} />
-                </View>
+          <View style={{ marginTop: 230 }}>
+            <Text style={{ marginBottom: 30, fontFamily: "Avenir", textAlign:'center' }}>Tap to Identify</Text>
+
+            <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite">
+              <TouchableHighlight onPress={this._takePhoto} style={{ backgroundColor: '#3fa45b', borderRadius: 190, height: 290, width: 290, shadowColor: '#005d1a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 2 }}>
+                <TouchableHighlight onPress={this._takePhoto} style={{ backgroundColor: '#2abfff', borderRadius: 170, height: 240, width: 240, shadowColor: '#005d1a', left: 25, top: 26, padding: 19, paddingTop: 23, paddingLeft: 20, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 2 }}>
+                  <Animatable.Text animation="pulse" easing="ease-in" iterationCount="infinite">
+                    <TouchableHighlight onPress={this._takePhoto} style={{ backgroundColor: '#ce0000', borderRadius: 100, height: 200, width: 200, shadowColor: '#005d1a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 2, right: 0, top: 40 }}>
+                      <View>
+                        <Image source={plant} style={{ height: 140, width: 140, left: 29, top: 26 }} />
+                      </View>
+                    </TouchableHighlight>
+                  </Animatable.Text>
+
+                </TouchableHighlight>
               </TouchableHighlight>
+
             </Animatable.Text>
+
           </View>
-          <Text style={{marginTop: 20}}>Tap to Identify</Text>
 
 
 
@@ -140,17 +160,11 @@ export default class App extends Component {
 
           {this._maybeRenderImage()}
           {this._maybeRenderUploadingOverlay()}
-          <View style={{ height: 70, width: '100%', position: "absolute", bottom: 30 }}>
-            <TouchableOpacity
-              onPress={this._pickImage}
-              style={{ position: "absolute", right: 20 }}
-            >
-              <Image
-                source={picturesIcon}
-                style={{ height: 50, width: 50, marginLeft: 30 }}
-              />
-              <Text>Select From Library</Text>
-            </TouchableOpacity>
+
+          <View style={{ height: 450, width: '100%', position: "absolute", bottom: 30, zIndex: -1 }}>
+            <Image source={forest} style={{ position: "relative", left: 0, height: 533, width: 'auto', zIndex: -1 }} />
+
+
           </View>
         </View>
       </AnimatedBackgroundColorView>
