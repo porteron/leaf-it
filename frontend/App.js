@@ -33,7 +33,7 @@ export default class App extends Component {
     uploading: false,
     loading: true,
     plantName: '',
-    selectedImage: {}
+    selectedImage: null
   };
 
   async componentWillMount() {
@@ -70,8 +70,6 @@ export default class App extends Component {
             <Text style={{ position: "absolute", left: 20, top: 40, fontSize: 14, fontFamily: "Avenir" }}>My Plants</Text>
             <Text style={{ position: "absolute", left: "38%", top: -3, fontSize: 28, fontFamily: "leaf-font", color: "#004303", textShadowColor: "#ddd", textShadowOffset: { width: 0, height: .5 }, textShadowRadius: .5 }}>Leaf It</Text>
 
-            {/* <Image source={compass} style={{ height: 30, width: 30, position: "absolute", right: 35, top: 5 }} />
-            <Text >Discover</Text> */}
             <TouchableOpacity
               onPress={this._pickImage}
               style={{ position: "absolute", right: 16, top: 11}}
@@ -82,11 +80,14 @@ export default class App extends Component {
               />
               <Text style={{fontSize: 14, fontFamily: "Avenir" }}>Photo Library</Text>
             </TouchableOpacity>
+            {this._maybeRenderImage()}
           </View>
+          
+
 
           <StatusBar barStyle="default" />
 
-          <View style={{ marginTop: 230 }}>
+          <View style={{ marginTop: -70 }}>
             <Text style={{ marginBottom: 30, fontFamily: "Avenir", textAlign:'center' }}>Tap to Identify</Text>
 
             <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite">
@@ -158,7 +159,6 @@ export default class App extends Component {
           style={{ backgroundColor: 'green', paddingTop: 20 }}
         /> */}
 
-          {this._maybeRenderImage()}
           {this._maybeRenderUploadingOverlay()}
 
           <View style={{ height: 450, width: '100%', position: "absolute", bottom: 30, zIndex: -1 }}>
@@ -252,6 +252,11 @@ export default class App extends Component {
     }
   };
 
+  _identifyPlant(image){
+    
+
+  }
+
   _pickImage = async () => {
     const {
       status: cameraRollPerm
@@ -264,7 +269,10 @@ export default class App extends Component {
         aspect: [4, 3],
       });
 
-      this.setState({ selectedImage })
+      this.setState({ 
+        selectedImage,
+        uploading:true
+      })
     }
   };
 
@@ -353,6 +361,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   maybeRenderContainer: {
+
     borderRadius: 3,
     elevation: 2,
     marginTop: 30,
@@ -366,13 +375,18 @@ const styles = StyleSheet.create({
     width: 250,
   },
   maybeRenderImageContainer: {
+    
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
     overflow: 'hidden',
   },
   maybeRenderImage: {
-    height: 250,
-    width: 250,
+    borderColor:"white",
+    marginTop:"15%",
+    marginLeft:10,
+    borderWidth:4,
+    height: 80,
+    width: 80,
   },
   maybeRenderImageText: {
     paddingHorizontal: 10,
