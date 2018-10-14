@@ -9,7 +9,7 @@ import {
   View,
   TouchableHighlight,
   TouchableOpacity,
-  Easing,
+  ImageEditor
 } from 'react-native';
 
 import { ImagePicker, Permissions } from 'expo';
@@ -72,23 +72,23 @@ export default class App extends Component {
 
             <TouchableOpacity
               onPress={this._pickImage}
-              style={{ position: "absolute", right: 16, top: 11}}
+              style={{ position: "absolute", right: 16, top: 11 }}
             >
               <Image
                 source={picturesIcon}
-                style={{ height: 22, width: 38, marginLeft: 20, marginBottom:10 }}
+                style={{ height: 22, width: 38, marginLeft: 20, marginBottom: 10 }}
               />
-              <Text style={{fontSize: 14, fontFamily: "Avenir" }}>Photo Library</Text>
+              <Text style={{ fontSize: 14, fontFamily: "Avenir" }}>Photo Library</Text>
             </TouchableOpacity>
             {this._maybeRenderImage()}
           </View>
-          
+
 
 
           <StatusBar barStyle="default" />
 
           <View style={{ marginTop: -70 }}>
-            <Text style={{ marginBottom: 30, fontFamily: "Avenir", textAlign:'center' }}>Tap to Identify</Text>
+            <Text style={{ marginBottom: 30, fontFamily: "Avenir", textAlign: 'center' }}>Tap to Identify</Text>
 
             <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite">
               <TouchableHighlight onPress={this._takePhoto} style={{ backgroundColor: '#3fa45b', borderRadius: 190, height: 290, width: 290, shadowColor: '#005d1a', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 2 }}>
@@ -182,14 +182,69 @@ export default class App extends Component {
     }
 
   }
-  _selectPlantName(item) {
-    console.log("Item: ", item.name)
-    if (item.name) {
-      this.setState({
-        plantName: item.name
-      })
+
+
+  _handleImagePicked = async () => {
+    let uploadResponse, uploadResult;
+    const { selectedImage, plantName } = this.state
+
+    if (Object.keys(selectedImage).length === 0) {
+      alert("No Image Selected")
+      return false
     }
+
+    // if (!plantName) {
+    //   alert("Please enter plant name")
+    //   return false
+
+
+    try {
+      // this.setState({
+      //   uploading: true
+      // });
+
+      if (!selectedImage.cancelled && selectedImage.base64) {
+        // uploadResponse = await uploadImageAsync(selectedImage.uri, plantName);
+        uploadResponse = await this._identifyPlant(selectedImage);
+
+        uploadResult = await uploadResponse.json();
+
+        this.setState({
+          image: uploadResult.location
+        })
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      alert('Upload failed, sorry');
+    } finally {
+      this.setState({
+        uploading: false
+      });
+    }
+  };
+
+  _identifyPlant({base64}) {
+
+    let apiUrl = `http://localhost:3000/identify`
+    // let apiUrl = `http://a8944446.ngrok.io/upload?plantName=${plantName}`
+
+    const data = JSON.stringify({
+      "data": base64
+    })
+
+    let options = {
+      method: 'POST',
+      body: data,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    };
+
+    return fetch(apiUrl, options);
   }
+
+
 
 
   _maybeRenderUploadingOverlay = () => {
@@ -230,7 +285,34 @@ export default class App extends Component {
     );
   };
 
+  _pickImage = async () => {
+    const {
+      status: cameraRollPerm
+    } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
+    // Only if user allows permission to camera roll
+    if (cameraRollPerm === 'granted') {
+      let selectedImage = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        base64: true,
+      });
+      // console.log("Selected Image: ", selectedImage)
+      this.setState({
+        selectedImage,
+      })
+    }
+    await this._handleImagePicked();
+  };
+
+  _selectPlantName(item) {
+    console.log("Item: ", item.name)
+    if (item.name) {
+      this.setState({
+        plantName: item.name
+      })
+    }
+  }
 
   _takePhoto = async () => {
     const {
@@ -252,73 +334,14 @@ export default class App extends Component {
     }
   };
 
-  _identifyPlant(image){
-    
-
-  }
-
-  _pickImage = async () => {
-    const {
-      status: cameraRollPerm
-    } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    // Only if user allows permission to camera roll
-    if (cameraRollPerm === 'granted') {
-      let selectedImage = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-      });
-
-      this.setState({ 
-        selectedImage,
-        uploading:true
-      })
-    }
-  };
-
-  _handleImagePicked = async () => {
-    let uploadResponse, uploadResult;
-    const { selectedImage, plantName } = this.state
-
-    if (Object.keys(selectedImage).length === 0) {
-      alert("No Image Selected")
-      return false
-    }
-
-    if (!plantName) {
-      alert("Please enter plant name")
-      return false
-    }
-
-    try {
-      this.setState({
-        uploading: true
-      });
-
-      if (!selectedImage.cancelled) {
-        uploadResponse = await uploadImageAsync(selectedImage.uri, plantName);
-        uploadResult = await uploadResponse.json();
-
-        this.setState({
-          image: uploadResult.location
-        })
-      }
-    } catch (error) {
-      console.log("error: ", error);
-      alert('Upload failed, sorry');
-    } finally {
-      this.setState({
-        uploading: false
-      });
-    }
-  };
 }
+
 
 async function uploadImageAsync(uri, plantName) {
   console.log("Upload")
 
-  // let apiUrl = `http://localhost:3000/upload?plantName=${plantName}`
-  let apiUrl = `http://a8944446.ngrok.io/upload?plantName=${plantName}`
+  let apiUrl = `http://localhost:3000/upload?plantName=${plantName}`
+  // let apiUrl = `http://a8944446.ngrok.io/upload?plantName=${plantName}`
   let uriParts = uri.split('.');
   let fileType = uriParts[uriParts.length - 1];
 
@@ -375,16 +398,16 @@ const styles = StyleSheet.create({
     width: 250,
   },
   maybeRenderImageContainer: {
-    
+
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
     overflow: 'hidden',
   },
   maybeRenderImage: {
-    borderColor:"white",
-    marginTop:"15%",
-    marginLeft:10,
-    borderWidth:4,
+    borderColor: "white",
+    marginTop: "15%",
+    marginLeft: 10,
+    borderWidth: 4,
     height: 80,
     width: 80,
   },

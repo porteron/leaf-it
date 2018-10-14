@@ -2,10 +2,21 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
-
+// Expose the /upload endpoint
+const app = require('express')();
+const http = require('http').Server(app);
 const aws = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
+const bodyParser = require('body-parser')
+
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
+
+app.use(bodyParser.json())
+
 
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -13,7 +24,6 @@ const s3 = new aws.S3({
   region: "us-east-1",
 });
 
-let directory = '';
 
 // Initialize multers3 with our s3 config and other options
 const upload = multer({
@@ -30,9 +40,8 @@ const upload = multer({
   })
 })
 
-// Expose the /upload endpoint
-const app = require('express')();
-const http = require('http').Server(app);
+
+
 
 app.post('/upload', upload.single('photo'), (req, res, next) => {
   console.log("-- Upload --")
@@ -42,6 +51,19 @@ app.post('/upload', upload.single('photo'), (req, res, next) => {
   console.log("Plant Name: ", plantName)
 
   res.json(req.file)
+})
+
+
+app.post('/identify', (req, res) => {
+  console.log("-- Identify --")
+
+
+  const data = req.body
+
+  console.log("JSON BOdy: ", data)
+
+
+  res.json({ "hit": "true" })
 })
 
 let port = process.env.PORT || 3000;
