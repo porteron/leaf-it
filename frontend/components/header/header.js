@@ -26,17 +26,28 @@ class Header extends Component {
         this.state = {
             selectedImage: '',
             prediction: [],
+            loading: true,
         }
     }
 
     async componentWillMount() {
         await Font.loadAsync({
-            'leaf-font': require('../../assets/fonts/leaf-font.otf')
+          'leaf-font': require('../../assets/fonts/leaf-font.otf')
         });
         this.setState({ loading: false });
-    }
+      }
+    
+
 
     render() {
+        let {
+            loading
+          } = this.state;
+      
+          if (loading) {
+            return <View>Loading...</View>
+          }
+
         return (
             <View style={{ position: 'absolute', top: 60, width: "100%" }}>
                 <Image source={profile} style={styles.headerProfile} />
