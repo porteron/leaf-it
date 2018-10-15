@@ -1,6 +1,6 @@
 export const identifyPlant = ({ base64 }) => {
     try {
-        let apiUrl = `http://localhost:3000/identify`
+        let apiUrl = `http://959f1808.ngrok.io/identify`
 
         const data = JSON.stringify({ "data": base64 })
 
@@ -16,7 +16,7 @@ export const identifyPlant = ({ base64 }) => {
         return fetch(apiUrl, options);
 
     } catch (error) {
-        console.log("error: ", error)
+        console.log("Error Identifying Plant: ", error)
     }
 
 }

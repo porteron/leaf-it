@@ -10,13 +10,35 @@ export const fetchPrediction = async (selectedImage) => {
     try {
 
         if (!selectedImage.cancelled && selectedImage.base64) {
-            const prediction = await (await identifyPlant(selectedImage)).json();
 
-            console.log('upload result: ', prediction)
+            let prediction = await (await identifyPlant(selectedImage)).json();
 
-            return { prediction }
+            prediction = prediction.replace(/\)/g, '"');
+            prediction = prediction.replace(/\(/g, '"');
+
+            prediction = JSON.parse(prediction)
+
+            console.log('Prediction: ', prediction)
+
+            let plants = ['Cherry Tomato Leaf', 'Dusty Miller', 'Jade', 'Lantana - Flame', 'Mexican Oregano', 'Red', 'Rose']
+
+            let predictedData = []
+            for (let p of prediction) {
+                let k = p.split(",")
+
+                predictedData.push({
+                    name: plants[k[0] - 1],
+                    index: k[0] - 1,
+                    percent: k[1],
+                })
+            }
+
+            // console.log("Predicted Data: ", predictedData)
+
+            return { prediction: predictedData }
         }
     } catch (error) {
+        console.log("Error fetching prediction: ", error)
         throw new Error("error: ", error);
     }
 }

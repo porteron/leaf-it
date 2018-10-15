@@ -32,22 +32,22 @@ class Header extends Component {
 
     async componentWillMount() {
         await Font.loadAsync({
-          'leaf-font': require('../../assets/fonts/leaf-font.otf')
+            'leaf-font': require('../../assets/fonts/leaf-font.otf')
         });
         this.setState({ loading: false });
-      }
-    
+    }
+
 
 
     render() {
         const {
             loading,
             prediction,
-          } = this.state;
-      
-          if (loading) {
+        } = this.state;
+
+        if (loading) {
             return <View>Loading...</View>
-          }
+        }
 
         return (
             <View style={{ position: 'absolute', top: 60, width: "100%" }}>
@@ -65,7 +65,21 @@ class Header extends Component {
                     <Text style={{ fontSize: 14, fontFamily: "Avenir" }}>Photo Library</Text>
                 </TouchableOpacity>
                 {this._maybeRenderImage()}
-                <Text>{String(prediction)}</Text>
+
+                {
+                    prediction ?
+                        <View style={styles.predictions}>
+                            {
+                                prediction.map(p => {
+                                    return (
+                                        <Text style={{ textAlign: 'right' }}>{`${p.name} | ${Math.floor(p.percent * 100, 3)}% `}</Text>
+                                    )
+                                })
+                            }
+                        </View>
+                        : null
+                }
+                
             </View>
         )
     }
@@ -79,8 +93,9 @@ class Header extends Component {
         }
 
         try {
-            const {prediction} = await fetchPrediction(selectedImage)
+            const { prediction } = await fetchPrediction(selectedImage)
             console.log("Prediction: ", prediction)
+            // alert(String(prediction))
             this.setState({ prediction })
         } catch (error) {
             console.log("error: ", error);

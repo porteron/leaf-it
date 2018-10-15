@@ -17,6 +17,9 @@ const plant = require('../../assets/images/plant.png')
 
 
 class BigButton extends Component {
+    state = {
+        prediction: ''
+    }
     render() {
         return (
             <View style={{ marginTop: -70 }}>
@@ -34,6 +37,7 @@ class BigButton extends Component {
                         </TouchableHighlight>
                     </TouchableHighlight>
                 </Animatable.Text>
+                <Text>{String(this.state.prediction)}</Text>
             </View>
         )
     }
@@ -55,7 +59,8 @@ class BigButton extends Component {
                 base64: true,
             });
 
-            let prediction = fetchPrediction(selectedImage);
+            let { prediction } = await fetchPrediction(selectedImage);
+            // alert(String(prediction))
             this.setState({ prediction })
         }
     };

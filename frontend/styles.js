@@ -88,6 +88,24 @@ export const styles = StyleSheet.create({
         left: 29,
         top: 26
     },
+    predictions: {
+        position: 'absolute',
+        display: 'inline',
+        padding: 8,
+        borderWidth: 3,
+        borderColor: 'white',
+        borderStyle: "solid",
+        right: 10,
+        top: 76,
+        backgroundColor: "rgba(255, 255, 255, 0.85)",
+        shadowColor: 'rgba(0,0,0,1)',
+        shadowOpacity: 0.2,
+        shadowOffset: {
+            height: 4,
+            width: 4,
+        },
+        shadowRadius: 5,
+    },
     forestBackground: {
         position: "relative",
         left: 0,
