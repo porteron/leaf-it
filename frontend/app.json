@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "leaf-it",
-    "description": "New UI",
+    "description": "client --> proxy --> api gateway --> lambda python api ",
     "slug": "leaf-it",
     "sdkVersion": "29.0.0",
     "version": "1.0.0",

@@ -8,11 +8,10 @@ import { AnimatedBackgroundColorView } from 'react-native-animated-background-co
 
 import BigButton from './components/bigbutton/bigbutton'
 import Header from './components/header/header'
-
+import { Background } from './components/background/background'
 import { styles } from './styles'
 
 const birds = require('./assets/images/birds.gif')
-const forest = require('./assets/images/forest.png')
 
 
 export default class App extends Component {
@@ -25,9 +24,7 @@ export default class App extends Component {
         <View style={styles.container}>
           <Header />
           <BigButton />
-          <View style={styles.forestBackgroundContainer}>
-            <Image source={forest} style={styles.forestBackground} />
-          </View>
+          <Background />
         </View>
       </AnimatedBackgroundColorView>
     );
