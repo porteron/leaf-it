@@ -1,5 +1,5 @@
-export URL='127.0.0.1:8001'
-# export URL=`chalice url`
+# export URL='127.0.0.1:8001'
+export URL=`chalice url`
 
 export PIC='DustyMiller.JPG'
 
@@ -15,7 +15,7 @@ export PIC='DustyMiller.JPG'
 # echo "$URL"
 echo
 (echo -n '{"data": "'; base64 $PIC; echo '"}') |
-curl --header "Content-Type: application/json" --request POST  --data @- $URL
+curl -H "Content-Type: application/json" -d '{"data": "TEST"}' $URL
 
 
 # (echo -n '{"data": "'; base64 $PIC; echo '"}') | curl --header "Content-Type: application/json" --request POST  --data @- $URL

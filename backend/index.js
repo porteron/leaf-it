@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 // Expose the /upload endpoint
 const app = require('express')();
 const http = require('http').Server(app);
+const fetch = require('node-fetch')
 const aws = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
@@ -54,16 +55,33 @@ app.post('/upload', upload.single('photo'), (req, res, next) => {
 })
 
 
-app.post('/identify', (req, res) => {
+app.post('/identify', (req) => {
   console.log("-- Identify --")
+  const url = "http://127.0.0.1:8001"
+  // const url = "https://hwapxq685f.execute-api.us-east-1.amazonaws.com/api"
+  
+  let body = JSON.stringify({
+    "data": req.body.data,
+    "topk": 3
+  })
 
+  // body = JSON.stringify({"hi":"bye"})
 
-  const data = req.body
+  let options = {
+    body,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept" : "application/json"
+    }
+  }
+  // console.log("Base 64 image data: ", body)
 
-  console.log("JSON BOdy: ", data)
+  fetch(url, options)
+    .then(res => res.json({ "response": res }))
+    .then(body => console.log("BODY: ", body));
 
-
-  res.json({ "hit": "true" })
+  // res.json({ "response": response })
 })
 
 let port = process.env.PORT || 3000;

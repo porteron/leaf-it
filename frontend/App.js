@@ -227,6 +227,7 @@ export default class App extends Component {
 
     let apiUrl = `http://localhost:3000/identify`
     // let apiUrl = `http://a8944446.ngrok.io/upload?plantName=${plantName}`
+    // let apiUrl = `http://a8944446.ngrok.io/upload?plantName=${plantName}`
 
     const data = JSON.stringify({
       "data": base64
