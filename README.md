@@ -1,13 +1,16 @@
-# image-upload-example
+# leaf-it
 
-Snap a photo or grab it from your camera roll, and upload it. See `/backend`
-for an example node service to handle the upload to S3 (Amazon AWS), and `/frontend`
-for the Expo app.
+Snap a photo or grab it from your camera roll.
 
-## Frontend
+You can upload a picture of a plant to S3 (`/upload?plantName={plantName}`) or send it to python API Gateway/Lambda function (`/identify`) that will run it through Tensorflow model and return a prediction on plant type.
+
+
+## Development
+
+### Frontend
 
 ``` sh
-cd image-upload-example
+cd leaf-it/frontend
 yarn install
 
 OR
@@ -15,14 +18,38 @@ OR
 npm install
 ```
 
-Then open the image-upload-example folder in XDE.
-
 ### Backend
 
 ``` sh
-cd image-upload-example
+cd leaf-t/backend
 npm install
 npm start
 ```
 
-**Try it:** https://expo.io/@community/image-upload-example
+
+### Chalice
+
+To deploy to API Gateway/Lambda on AWS
+
+``` sh
+cd leaf-t/chalice
+chalice deploy --profile {PROFILE NAME}
+```
+
+To deploy locally
+
+``` sh
+cd leaf/chalice
+ chalice local --port=8001
+ ```
+
+ ### Jupyter Notebook
+
+ Python TensorFlow Model 
+
+ Endpoint it exposed through *AWS Sagemaker*
+
+ `/leaf-it.ipynb`
+
+
+
