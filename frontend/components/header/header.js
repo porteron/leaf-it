@@ -25,7 +25,7 @@ class Header extends Component {
         super()
         this.state = {
             selectedImage: '',
-            prediction: [],
+            prediction: '',
             loading: true,
         }
     }
@@ -40,8 +40,9 @@ class Header extends Component {
 
 
     render() {
-        let {
-            loading
+        const {
+            loading,
+            prediction,
           } = this.state;
       
           if (loading) {
@@ -54,7 +55,7 @@ class Header extends Component {
                 <Text style={styles.myPlants}>My Plants</Text>
                 <Text style={styles.mainTitle}>Leaf It</Text>
                 <TouchableOpacity
-                    onPress={this._pickImage}
+                    onPress={this._selectImageAndPredict}
                     style={{ position: "absolute", right: 16, top: 11 }}
                 >
                     <Image
@@ -64,6 +65,7 @@ class Header extends Component {
                     <Text style={{ fontSize: 14, fontFamily: "Avenir" }}>Photo Library</Text>
                 </TouchableOpacity>
                 {this._maybeRenderImage()}
+                <Text>{String(prediction)}</Text>
             </View>
         )
     }
@@ -77,7 +79,8 @@ class Header extends Component {
         }
 
         try {
-            const prediction = fetchPrediction(selectedImage)
+            const {prediction} = await fetchPrediction(selectedImage)
+            console.log("Prediction: ", prediction)
             this.setState({ prediction })
         } catch (error) {
             console.log("error: ", error);
@@ -112,7 +115,7 @@ class Header extends Component {
         );
     };
 
-    _pickImage = async () => {
+    _selectImageAndPredict = async () => {
         const {
             status: cameraRollPerm
         } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
