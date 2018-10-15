@@ -2,10 +2,10 @@
 
 Snap a photo or grab it from your camera roll.
 
-*Contribute to dataset*: Upload a picture of a plant to S3 (`/upload?plantName={plantName}`)
+**Contribute to dataset**: Upload a picture of a plant to S3 (`/upload?plantName={plantName}`)
  
 
-*Identify Picture of Plant*: Send base64 image to python API Gateway/Lambda function (`/identify`) that will run it through exposed Tensorflow model enpoint and return a prediction on plant type.
+**Identify Picture of Plant**: Send base64 image to python API Gateway/Lambda function (`/identify`) that will run it through exposed Tensorflow model enpoint and return a prediction on plant type.
 
 
 ## Development
@@ -50,7 +50,7 @@ To deploy locally
 
  Python TensorFlow Model 
 
- Endpoint it exposed through *AWS Sagemaker*
+ Endpoint it exposed through **AWS Sagemaker**
 
  ``` sh
  /leaf-it.ipynb
