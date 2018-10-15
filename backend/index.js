@@ -55,7 +55,7 @@ app.post('/upload', upload.single('photo'), (req, res, next) => {
 })
 
 
-app.post('/identify', (req) => {
+app.post('/identify', (req,res) => {
   console.log("-- Identify --")
   const url = "http://127.0.0.1:8001"
   // const url = "https://hwapxq685f.execute-api.us-east-1.amazonaws.com/api"
@@ -78,10 +78,11 @@ app.post('/identify', (req) => {
   // console.log("Base 64 image data: ", body)
 
   fetch(url, options)
-    .then(res => res.json({ "response": res }))
-    .then(body => console.log("BODY: ", body));
-
-  // res.json({ "response": response })
+    .then(response => response.json({ "response": res }))
+    .then(body => {
+      console.log("BODY: ", body)
+      res.json(body.response)
+    });
 })
 
 let port = process.env.PORT || 3000;
