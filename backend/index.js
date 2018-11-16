@@ -58,7 +58,6 @@ app.post('/upload', upload.single('photo'), (req, res, next) => {
 app.post('/identify', (req,res) => {
   console.log("-- Identify --")
   const url = "http://127.0.0.1:8001"
-  // const url = "https://hwapxq685f.execute-api.us-east-1.amazonaws.com/api"
   
   let body = JSON.stringify({
     "data": req.body.data,
